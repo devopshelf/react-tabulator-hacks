@@ -7,6 +7,7 @@ class Table extends Component {
     constructor(props) {
       super(props)
       this.state = {
+         rowNo:null, 
          data:[
             {
                 id:1,
@@ -71,9 +72,17 @@ class Table extends Component {
     }
     
    addRow(){
-       this.setState({
-           data:[...this.state.data,{}]
-       })
+       if(this.state.rowNo === null){
+            this.setState({
+                data:[...this.state.data,{}]
+            })
+       }else{
+            let newDataArray = this.state.data;
+            newDataArray.splice(this.state.rowNo,0,{});
+            this.setState({
+                data:newDataArray
+            })
+       }
    } 
 
    deleteRow(row){
@@ -89,13 +98,16 @@ class Table extends Component {
    }
 
   render() {
-    
+    console.log(this.state.rowNo)
     return (
       <div>
         <button onClick={this.addRow}>ADD</button>  
         <ReactTabulator 
             data={this.state.data}
             columns={this.state.columns}
+            rowClick={(e,row)=>{
+                this.setState({ rowNo:row._row.data.id});
+            }}
         />
       </div>
     )
